@@ -4,7 +4,7 @@
 
 Welcome to WDB's backend project for development branch applicants — Spring 2022 👋
 
-Make sure you read these instructions carefully before you start. If you have any questions
+Make sure you read this ENTIRE DOCUMENT, especially these instructions, carefully before you start. If you have any questions
 please reach out to [our email](webatberkeley@gmail.com).
 
 To submit your project, please place your submission into a GitHub repo that is set to private. You
@@ -28,15 +28,13 @@ They've listed out a comprehensive set of rules for their event below (_make sur
 
 1. A duck can REGISTER for the event if they provide their name and initial stipend. You may assume that no two ducks with the same name will ever register. You can find a more detailed explanation of what a duck is in the API Documentation section.
 
-2. Duck Fashion Week Administrators can ADD new clothing items or UPDATE existing clothing items at any time. You can find a more detailed explanation of what a clothing item is, as well as what updating one looks like in the API Documentation section.
+2. Duck Fashion Week Administrators can ADD new clothing items or UPDATE existing clothing items at any time. You can find a more detailed explanation of what a clothing item is in the API Documentation section, but as a quick rundown, its got a "name", a "units" (or quantity), and "points" (the average # of points that each unit is worth).
 
-3. Registered ducks will be able to execute a BID command for clothing items currently on the market. You can find a more detailed explanation of what a bid is in the API Documentation section.
+3. Registered ducks will be able to execute a BID command for clothing items currently on the market. You can find a more detailed explanation of what a bid is in the API Documentation section, but as a quick rundown, its got a "duck" (name of duck buying), "".
 
 4. Whenever the Duck Fashion Week admins execute a SELL command, they clothing item will be sold. For this given clothing item, it will continue to be sold until there are either no more bids for the clothing item, or no more quantity available for the clothing item. You can find a more detailed explanation of what a sell is in the API Documentaiton section.
 
    - As long as a clothing item can be sold, it will be sold to the bid with the highest price. After this, that bid will be deleted, the price of the bid will be deducted from the duck's stipend, and the clothing item is added to the duck's wardrobe. However, the transaction for a bid can only go through if the duck that issued the bid **has enough money in their stipend** to cover the price of the bid. If the duck does not have enough money, this bid should be ignored/deleted, and we should move on to finding the next best bid.
-
-   - If the Duck Fashion Week admins execute a SELL for a clothing item but there are no more clothing items to sell, do nothing (and return with a status of 400).
 
 5. At any point, the Duck Fashion Week Administrators can execute a TALLY command. When this happens, they want the following information:
 
@@ -76,9 +74,19 @@ Creates a clothing item named "Jacket" with 1 unit worth 10 points.
 }
 ```
 
-Create a duck named "Clarence" with a total stipend of 155.
+4. GET /duck
 
-4. POST /clothingItem
+```
+{
+    "name": "Clarence",
+    "money": 155,
+    "clothingItems": []
+}
+```
+
+Return info on Clarence. Note that since he has no clothing items yet, we return an empty array.
+
+5. POST /clothingItem
 
 ```
 {
@@ -90,7 +98,7 @@ Create a duck named "Clarence" with a total stipend of 155.
 
 Creates a clothing item named "Pants" with 2 units, each worth 15 points.
 
-5. POST /clothingItem
+6. POST /clothingItem
 
 ```
 {
@@ -101,23 +109,6 @@ Creates a clothing item named "Pants" with 2 units, each worth 15 points.
 ```
 
 In this scenario, the clothing item named "Jacket" already existed. Thus we should UPDATE that instead of adding a completely new one. The new quantity should be 4 (comes from 1 + 3). The points should be averaged between all units (10 + 3 \* 20) / 4 = 17.5. Thus, "Jacket" now has 4 units and each is 17.5 points.
-
-6. GET /clothingItem
-
-```
-Request:
-{
-    "name": "Jacket"
-}
-
-
-Response:
-{
-    "name": "Jacket",
-    "units": 4,
-    "points": 17.5
-}
-```
 
 7. POST /transact/bid
 
@@ -256,28 +247,27 @@ To summarize, Duck Fashion Show is tasking us with building an API that can do t
 1. Add a duck to the database.
 2. Retrieve info on a duck in the database.
 3. Add or update clothing items in the database.
-4. Retrieve info on a clothing item in the database.
-5. Add a bid to the database.
-6. Sell a clothing item in the database.
-7. Tally the points accumulated from all of the registered ducks in the database.
-8. Clear Database
+4. Add a bid to the database.
+5. Sell a clothing item in the database.
+6. Tally the points accumulated from all of the registered ducks in the database.
 
 Now it's up to you to implement their API in the language of your choice! You can find a detailed API doc at https://wdb.stoplight.io/studio/backend-technical-project.
 
+Some of these routes don't need much logic (ex: 1, 2, and 4), while others will require a bit more thinking (3, 5, 6). If you aren't able to finish all of the routes for the project, **don't worry**! It's supposed to be challenging, and we don't expect everyone to finish it, especially folks who are interested in joining the bootcamp. You won't need to complete the full project in order to "pass"/get a full score :)
+
 Note: we **highly** recommend using MongoDB as your database for this project, although if you don't have experience with it, any NoSQL database is also a great alternative. If none of those work however, you are still welcome to use other alternatives.
 
-It is also recommended to use JavaScript/TypeScript with Node.js for your backend, but it is completely fine if you would rather use a different stack.
+It is also encouraged to use JavaScript/TypeScript with Node.js for your backend, but it is completely fine if you would rather use a different stack.
 
 ## Design Doc
 
 In addition to building out this API, you will need to write up a short design doc (designdoc.md). We don't intend for this to take very much time, but we want to hear some of the choices you made and why. To be specific, here are some points you might want to talk about:
 
-- why did you choose to organize your data schemas in this particular way?
-- why did you organize your project (think file structure, organizing routes, etc) in this particular way?
+- why did you choose to organize your data in this particular way?
 - can talk a bit about the "harder" routes that you worked on — harder is completely subjective, so feel free to get creative here!
 - how did you decide on certain response codes?
 
-This shouldn't be longer than a page, so feel free to be brief!
+This should be at most a page, so feel free to be brief!
 
 ## Optional: Authentication
 
@@ -287,7 +277,7 @@ Some evil ducks are trying to spoof fake bids from other ducks. Stop them from d
 
 1. Register: the duck should still be able to register via a POST request. However, now you should include a password field in the post request.
 2. Login: this is a completely new route you will need to create. The duck should be able to login via a POST request, containing the {"name": "duck_name_goes_here", "password": "password_goes_here"} request body.
-3. The /bid route can only be accessed if the duck is signed in. Furthermore, an authenticated duck can only make a bid in their own name.
+3. The /transact/bid route can only be accessed if the duck is signed in. Furthermore, an authenticated duck can only make a bid in their own name.
 
 _Hint: Access Token_
 
