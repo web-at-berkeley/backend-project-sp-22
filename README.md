@@ -24,13 +24,13 @@ As a backend engineer, you need to create a backend service that helps keep trac
 
 They've listed out a comprehensive set of rules for their event below (_make sure you read through this carefully_):
 
-1. A duck can only REGISTER for the event if they have a valid name, and have a stipend associated with their name. You can access a list of all valid ducks and their stipends at THIS API. The response is formatted as {"duck name": stipend}. You may assume that no two ducks with the same name will ever register. You can find a more detailed explanation of what a duck is HERE.
+1. A duck can only REGISTER for the event if they have a valid name, and have a stipend associated with their name. You can access a list of all valid ducks and their stipends at THIS API. The response is formatted as {"duck name": stipend}. You may assume that no two ducks with the same name will ever register. You can find a more detailed explanation of what a duck is in the API Documentation section.
 
-2. Duck Fashion Week Administrators can ADD new clothing items or UPDATE existing clothing items at any time. You can find a more detailed explanation of what a clothing item is, as well as what updating one looks like, HERE.
+2. Duck Fashion Week Administrators can ADD new clothing items or UPDATE existing clothing items at any time. You can find a more detailed explanation of what a clothing item is, as well as what updating one looks like in the API Documentation section.
 
-3. Registered ducks will be able to execute a BID command for clothing items currently on the market. You can find a more detailed explanation of what a bid is HERE.
+3. Registered ducks will be able to execute a BID command for clothing items currently on the market. You can find a more detailed explanation of what a bid is in the API Documentation section.
 
-4. Whenever the Duck Fashion Week admins execute a SELL command, they clothing item will be sold. For this given clothing item, it will continue to be sold until there are either no more bids for the clothing item, or no more quantity available for the clothing item. You can find a more detailed explanation of what a sell is HERE.
+4. Whenever the Duck Fashion Week admins execute a SELL command, they clothing item will be sold. For this given clothing item, it will continue to be sold until there are either no more bids for the clothing item, or no more quantity available for the clothing item. You can find a more detailed explanation of what a sell is in the API Documentaiton section.
 
    - As long as a clothing item can be sold, it will be sold to the bid with the highest price. After this, that bid will be deleted, the price of the bid will be deducted from the duck's stipend, and the clothing item is added to the duck's wardrobe. However, the transaction for a bid can only go through if the duck that issued the bid **has enough money in their stipend** to cover the price of the bid. If the duck does not have enough money, this bid should be ignored/deleted, and we should move on to finding the next best bid.
 
@@ -38,26 +38,16 @@ They've listed out a comprehensive set of rules for their event below (_make sur
 
 5. At any point, the Duck Fashion Week Administrators can execute a TALLY command. When this happens, they want the following information:
 
-   - For each duck registered in the competition, take the total sum of the Style Points associated with each purchased clothing item in its wardrobe. Return a dictionary/map of this information.
+   - For each duck registered in the competition, take the total sum of the points associated with each purchased clothing item in its wardrobe. Return a dictionary/map of this information. Note: if the points have changed for an item since they have bought it (maybe an POST /clothingItem happened after the /POST sell), use the most recent points value!
 
-Here's a couple of example scenarios of how the event might run:
+Here's a couple of example scenarios of how the event might run (we potentially might add more, in case there is popular demand):
 
-For the rest of this doc, assume the Valid Ducks API Endpoint response looks like this:
-
-```
-{
-    "Alice": 100,
-    "Bob": 60,
-    "Clarence": 155,
-    "Devon": 130
-}
-```
-
-1. POST /register
+1. POST /duck/register
 
 ```
 {
-    "name": "Alice"
+    "name": "Alice",
+    "money": 100,
 }
 ```
 
@@ -69,17 +59,18 @@ Create a duck named "Alice" with a total stipend of 100.
 {
     "name": "Jacket",
     "units": 1,
-    "points": 10
+    "points": 10,
 }
 ```
 
 Creates a clothing item named "Jacket" with 1 unit worth 10 points.
 
-3. POST /register
+3. POST /duck/register
 
 ```
 {
-    "name": "Clarence"
+    "name": "Clarence",
+    "money": 155
 }
 ```
 
@@ -109,7 +100,24 @@ Creates a clothing item named "Pants" with 2 units, each worth 15 points.
 
 In this scenario, the clothing item named "Jacket" already existed. Thus we should UPDATE that instead of adding a completely new one. The new quantity should be 4 (comes from 1 + 3). The points should be averaged between all units (10 + 3 \* 20) / 4 = 17.5. Thus, "Jacket" now has 4 units and each is 17.5 points.
 
-6. POST /bid
+6. GET /clothingItem
+
+```
+Request:
+{
+    "name": "Jacket"
+}
+
+
+Response:
+{
+    "name": "Jacket",
+    "units": 4,
+    "points": 17.5
+}
+```
+
+7. POST /transact/bid
 
 ```
 {
@@ -121,7 +129,7 @@ In this scenario, the clothing item named "Jacket" already existed. Thus we shou
 
 Alice submits a bid for the jacket for a price of 70.
 
-7. POST /bid
+8. POST /transact/bid
 
 ```
 {
@@ -131,7 +139,7 @@ Alice submits a bid for the jacket for a price of 70.
 }
 ```
 
-8. POST /bid
+9. POST /transact/bid
 
 ```
 {
@@ -141,7 +149,7 @@ Alice submits a bid for the jacket for a price of 70.
 }
 ```
 
-9. POST /bid
+10. POST /transact/bid
 
 ```
 {
@@ -151,7 +159,17 @@ Alice submits a bid for the jacket for a price of 70.
 }
 ```
 
-10. POST /sell
+11. POST /transact/bid
+
+```
+{
+    "duck": "Clarence"
+    "name": "Jacket",
+    "offer": 20,
+}
+```
+
+12. POST /transact/sell
 
 ```
 {
@@ -165,140 +183,107 @@ The bids, sorted in order of price are:
 - bid of 55 from Clarence
 - bid of 50 from Alice
 
-Bid of 100 from Clarence is processed (he has )
+First, the bid of 100 from Clarence is processed. He now has a `money` of 55, but has Pants too. Then, the bid of 55 from Clarence is processed. He now has a `money` of 0, but has another pair of pants. There are no more units for Pants, so we are done.
 
-Here's another example of how to match a list of cats to a list of vegetable:
+13. GET /duck
 
 ```
-cats = ["Alex", "Abhi", "Samarth"]
-veges = ["Artichoke", "Asparagus", "Onion", "Green Beans", "Squash"]
-
-Matchings = {
-  "Alex": ["Artichoke", "Asparagus"],
-  "Abhi": ["Artichoke", "Asparagus"],
-  "Samarth": ["Squash"],
+Request Params (not body):
+{
+    "name": "Clarence"
 }
 
+
+Response:
+{
+    "name": "Clarence",
+    "money": 0,
+    "clothingItems": ["Pants", "Pants"]
+}
+```
+
+14. POST /transact/sell
+
+```
+{
+    "name": "Jacket"
+}
+```
+
+The bids, sorted in order of price are:
+
+- bid of 70 from Alice
+- bid of 20 from Clarence
+
+First, the bid of 70 from Alice is processed. She now has a `money` of 30, but has Jacket too. Then, the bid of 20 from Clarence is processed, but he has 0 `money` so he can't afford it, so the bid is deleted and he doesn't get anything. There are no more bids for Jacket, so we are done.
+
+15. GET /duck
+
+```
+Request Params (not body):
+{
+    "name": "Alice"
+}
+
+
+Response:
+{
+    "name": "Alice",
+    "money": 30,
+    "clothingItems": ["Jacket"]
+}
+```
+
+16. GET /tally
+
+```
+No Request Params
+
+
+Response:
+{
+    "Alice": 17.5,
+    "Clarence": 30
+}
 ```
 
 ## API Doc
 
 To summarize, Duck Fashion Show is tasking us with building an API that can do the following things:
 
-1. Add a valid duck to the database.
-2. Add or update clothing items in the database.
-3. Add a bid to the database.
-4. Sell a clothing item in the database.
-5. Tally the style points accumulated from all of the registered ducks in the database.
+1. Add a duck to the database.
+2. Retrieve info on a duck in the database.
+3. Add or update clothing items in the database.
+4. Retrieve info on a clothing item in the database.
+5. Add a bid to the database.
+6. Sell a clothing item in the database.
+7. Tally the points accumulated from all of the registered ducks in the database.
+8. Clear Database
 
-In the language of your choice, implement their API! Here are more technical details to help
-you with your implementation:
+Now it's up to you to implement their API in the language of your choice! You can find a detailed API doc at https://wdb.stoplight.io/studio/backend-technical-project.
 
-### Register Valid Duck (`POST`)
+Note: we highly recommend using MongoDB as your database for this project, although if you don't have experience with it, any NoSQL database is also a great alternative. If none of those work however, you are still welcome to use other alternatives.
 
-The Duck Fashion Show already keeps a mapping of valid ducks names to initial stipends in their server. You can access them via sending a GET request to this API:
+## Design Doc
 
-1. http://duck-fashion-show.herokuapp.com/api/ducks
+In addition to building out this API, you will need to write up a short design doc (designdoc.md). We don't intend for this to take very much time, but we want to hear some of the choices you made and why. To be specific, here are some points you might want to talk about:
 
-When you receive a POST request to the `/register` endpoint, you should cross-reference the mapping of valid ducks. If the duck is invalid or something is wrong with the request. If the duck is valid, store its data in a database, and return the Response with status 200 and a body that contains the duck's info. If the duck is not valid, return an empty response with a error response (use your best judgment for which HTTP status codes to use).
+- why did you choose to organize your data schemas in this particular way?
+- why did you organize your project (think file structure, organizing routes, etc) in this particular way?
+- can talk a bit about the "harder" routes that you worked on — harder is completely subjective, so feel free to get creative here!
+- how did you decide on certain response codes?
 
-```
-ducks
-POST /register Request Body { name: "Alice"}
-POST /register Response Body (Status 200):
-{
-  name: "Alice",
-  money: 100
-}
-```
-
-### Get Current Duck Score (`GET`)
-
-At any point, we should be able to get a duck's score.
-Besides the list of cats & veges that they already have, the Cats in the Sky Company also wants to be able to add new cat / new vege easily. However, it turns out they don't have any space to store any data at all! We need to create a database for them and store all the cat / vege that they want to add.
-
-This should be a POST endpoint that allow the users to add new cat / new vege by including the information in the post body.
-For instance, if the user wants to add a cat called "Alice", they need to send a POST request with the following body:
-
-```
-{
-  "cat": "Alice",
-}
-```
-
-Similarly, if the user wants to add a vege, they need to send a POST request with a body containing `"vege": "name of vege"` as well.
-
-Once the user sends a POST request, the data should be stored in a database. In the future, if the user call the "GET" endpoint again, we need to take the newly added data into account as well.
-
-For instance:
-if we have:
-
-```
-cats = ["Alex", "Abhi", "Samarth"]
-veges = ["Artichoke", "Asparagus", "Onion", "Green Beans", "Squash"]
-```
-
-returned from the APIs, and the user decides to add a cat named "Oliver", then if the user send a GET request again, they should receive:
-
-```
-Matchings = {
-  "Alex": ["Artichoke", "Asparagus"],
-  "Abhi": ["Artichoke", "Asparagus"],
-  "Samarth": ["Squash"],
-  "Oliver": ["Onion"]
-}
-```
-
-### Deleting a Vege (`DELETE`)
-
-The Cats in the Sky Company also asks us to come up with a way to delete any vege in case any cat has some hidden alergies. To delete a vege, similarly to adding a cat / vege, the user needs to send a DELETE request, with body containing the name of the vege like this:
-
-```
-{
-  "vege": ["Orange"]
-}
-```
-
-There are two different cases for DELETE:
-
-1. If the vege is one of the veges returned by the vege API, track it inside the database, and make sure that when calling `GET`, that vege will not be considered during the matching process.
-2. If the vege is not one of the veges returned by the vege API, simply remove it from the database.
-
-Here's a example of the first case:
-
-```
-# Returned by API
-cats = ["Alex", "Abhi", "Samarth"]
-veges = ["Artichoke", "Asparagus", "Green Beans", "Squash"]
-
-# First Get
-Matchings = {
-  "Alex": ["Artichoke", "Asparagus"],
-  "Abhi": ["Artichoke", "Asparagus"],
-  "Samarth": ["Squash"],
-}
-
-# Send the DELETE request
-DELETE: {
-  "vege": "Squash"
-}
-
-# GET after DELETE
-Matchings = {
-  "Alex": ["Artichoke", "Asparagus"],
-  "Abhi": ["Artichoke", "Asparagus"],
-}
-```
+This shouldn't be longer than a page, so feel free to be brief!
 
 ## Optional: Authentication
 
 _This is an extra credit question. Please prioritize solving the other questions before attempting this question._
 
-Some evil customers are trying to delete our cats by sending DELETE request to our server! Stop them from doing that by building a user authentication system. The system should support the following functionality:
+Some evil ducks are trying to spoof fake bids from other ducks. Stop them from doing that by building a duck authentication system. The system should support the following functionality:
 
-1. Sign Up: the user should be able to sign up via a POST request, containing the {"username": "name","pwd": "password"} request body.
-2. Sign In: the user should be able to sign in via a POST request, containing the {"username": "name","pwd": "password"} request body.
-3. The DELETE route can only be accessed if the user is signed in.
+1. Register: the duck should still be able to register via a POST request. However, now you should include a password field in the post request.
+2. Login: this is a completely new route you will need to create. The duck should be able to login via a POST request, containing the {"name": "duck_name_goes_here", "password": "password_goes_here"} request body.
+3. The /bid route can only be accessed if the duck is signed in. Furthermore, an authenticated duck can only make a bid in their own name.
 
 _Hint: Access Token_
 
