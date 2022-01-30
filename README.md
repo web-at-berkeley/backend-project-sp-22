@@ -14,7 +14,7 @@ immediately. The Gradescope course code is `5VG683`. You will see two different 
 `Frontend Technical Project` and `Backend Technical Project`. _Please only submit to Backend
 Technical Project._ You can ignore Frontend Technical Project.
 
-The technical project will be due by ENTER DATE at midnight. We will be unable to respond to clarification emails sent in after then. so if you have any questions about the project, please let us know before then (we will be hosting technical project office hours in our club recruitment Discord, which you can join [here](https://discord.gg/syhqwpnx7a))
+The technical project will be due by Wednesday, 2/2 at midnight. We will be unable to respond to clarification emails sent in after then. so if you have any questions about the project, please let us know before then (we will be hosting technical project office hours in our club recruitment Discord, which you can join [here](https://discord.gg/syhqwpnx7a))
 
 ## Introduction
 
