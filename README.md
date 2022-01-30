@@ -30,7 +30,7 @@ They've listed out a comprehensive set of rules for their event below (_make sur
 
 2. Duck Fashion Week Administrators can ADD new clothing items or UPDATE existing clothing items at any time. You can find a more detailed explanation of what a clothing item is in the API Documentation section, but as a quick rundown, its got a "name", a "units" (or quantity), and "points" (the average # of points that each unit is worth).
 
-3. Registered ducks will be able to execute a BID command for clothing items currently on the market. You can find a more detailed explanation of what a bid is in the API Documentation section, but as a quick rundown, its got a "duck" (name of duck buying), "".
+3. Registered ducks will be able to execute a BID command for clothing items currently on the market. You can find a more detailed explanation of what a bid is in the API Documentation section, but as a quick rundown, its got a "duck" (name of duck buying), an offer (price), and the clothingItem (name of item)
 
 4. Whenever the Duck Fashion Week admins execute a SELL command, they clothing item will be sold. For this given clothing item, it will continue to be sold until there are either no more bids for the clothing item, or no more quantity available for the clothing item. You can find a more detailed explanation of what a sell is in the API Documentaiton section.
 
