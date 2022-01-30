@@ -4,7 +4,7 @@
 
 Welcome to WDB's backend project for development branch applicants — Spring 2022 👋
 
-Make sure you read these instructions carefully before your start. If you have any questions
+Make sure you read these instructions carefully before you start. If you have any questions
 please reach out to [our email](webatberkeley@gmail.com).
 
 To submit your project, please place your submission into a GitHub repo that is set to private. You
@@ -14,7 +14,9 @@ immediately. The Gradescope course code is `5VG683`. You will see two different 
 `Frontend Technical Project` and `Backend Technical Project`. _Please only submit to Backend
 Technical Project._ You can ignore Frontend Technical Project.
 
-The technical project will be due by Wednesday, 2/2 at midnight. We will be unable to respond to clarification emails sent in after then. so if you have any questions about the project, please let us know before then (we will be hosting technical project office hours in our club recruitment Discord, which you can join [here](https://discord.gg/syhqwpnx7a))
+The technical project will be due by Wednesday, 2/2 at midnight. We will be unable to respond to clarification emails sent in after then. so if you have any questions about the project, please let us know before then (we will be hosting technical project office hours in our club recruitment Discord, which you can join [here](https://linktr.ee/webdevatberkeley)).
+
+Also, this page may potentially keep changing if we get some frequently asked questions, so keep this repository bookmarked and check back on it every now and then! If there are major changes however, we'll make sure to email you about those.
 
 ## Introduction
 
@@ -24,7 +26,7 @@ As a backend engineer, you need to create a backend service that helps keep trac
 
 They've listed out a comprehensive set of rules for their event below (_make sure you read through this carefully_):
 
-1. A duck can only REGISTER for the event if they have a valid name, and have a stipend associated with their name. You can access a list of all valid ducks and their stipends at THIS API. The response is formatted as {"duck name": stipend}. You may assume that no two ducks with the same name will ever register. You can find a more detailed explanation of what a duck is in the API Documentation section.
+1. A duck can REGISTER for the event if they provide their name and initial stipend. You may assume that no two ducks with the same name will ever register. You can find a more detailed explanation of what a duck is in the API Documentation section.
 
 2. Duck Fashion Week Administrators can ADD new clothing items or UPDATE existing clothing items at any time. You can find a more detailed explanation of what a clothing item is, as well as what updating one looks like in the API Documentation section.
 
@@ -247,7 +249,7 @@ Response:
 }
 ```
 
-## API Doc
+## API Requirements: what you're working on
 
 To summarize, Duck Fashion Show is tasking us with building an API that can do the following things:
 
@@ -262,7 +264,9 @@ To summarize, Duck Fashion Show is tasking us with building an API that can do t
 
 Now it's up to you to implement their API in the language of your choice! You can find a detailed API doc at https://wdb.stoplight.io/studio/backend-technical-project.
 
-Note: we highly recommend using MongoDB as your database for this project, although if you don't have experience with it, any NoSQL database is also a great alternative. If none of those work however, you are still welcome to use other alternatives.
+Note: we **highly** recommend using MongoDB as your database for this project, although if you don't have experience with it, any NoSQL database is also a great alternative. If none of those work however, you are still welcome to use other alternatives.
+
+It is also recommended to use JavaScript/TypeScript with Node.js for your backend, but it is completely fine if you would rather use a different stack.
 
 ## Design Doc
 
