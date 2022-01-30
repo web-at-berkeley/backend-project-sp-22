@@ -251,7 +251,7 @@ To summarize, Duck Fashion Show is tasking us with building an API that can do t
 5. Sell a clothing item in the database.
 6. Tally the points accumulated from all of the registered ducks in the database.
 
-Now it's up to you to implement their API in the language of your choice! You can find a detailed API doc at https://wdb.stoplight.io/studio/backend-technical-project.
+Now it's up to you to implement their API in the language of your choice! You can find a detailed API doc at https://wdb.stoplight.io/docs/backend-technical-project/b3A6MzgxMDMwOTQ-register-duck.
 
 Some of these routes don't need much logic (ex: 1, 2, and 4), while others will require a bit more thinking (3, 5, 6). If you aren't able to finish all of the routes for the project, **don't worry**! It's supposed to be challenging, and we don't expect everyone to finish it, especially folks who are interested in joining the bootcamp. You won't need to complete the full project in order to "pass"/get a full score :)
 
