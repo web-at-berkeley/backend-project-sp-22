@@ -1,5 +1,8 @@
 # Duck Fashion Show
 
+## Clarifications
+- Your database can definitely be on localhost! We don't expect you to pay for hosting it in the cloud.
+- Remember that you don't need to finish the full project to get a full score! Though it would be great if you are able to, we will not hold it against you if you cannot.
 ## Submission Instructions
 
 Welcome to WDB's backend project for development branch applicants — Spring 2022 👋
