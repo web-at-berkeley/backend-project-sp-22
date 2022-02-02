@@ -3,6 +3,9 @@
 ## Clarifications
 - Your database can definitely be on localhost! We don't expect you to pay for hosting it in the cloud.
 - Remember that you don't need to finish the full project to get a full score! Though it would be great if you are able to, we will not hold it against you if you cannot.
+- Some changes were made to the examples in this doc. The ground source of truth is the API documentation on stoplight, but since we made changes late, we will accept either:
+    - changed name to clothingItem for SELL and BID
+    - changed /duck/register to /duck
 ## Submission Instructions
 
 Welcome to WDB's backend project for development branch applicants — Spring 2022 👋
@@ -45,7 +48,7 @@ They've listed out a comprehensive set of rules for their event below (_make sur
 
 Here's a couple of example scenarios of how the event might run (we potentially might add more, in case there is popular demand):
 
-1. POST /duck/register
+1. POST /duck
 
 ```
 {
@@ -68,7 +71,7 @@ Create a duck named "Alice" with a total stipend of 100.
 
 Creates a clothing item named "Jacket" with 1 unit worth 10 points.
 
-3. POST /duck/register
+3. POST /duck
 
 ```
 {
@@ -118,7 +121,7 @@ In this scenario, the clothing item named "Jacket" already existed. Thus we shou
 ```
 {
     "duck": "Alice"
-    "name": "Jacket",
+    "clothingItem": "Jacket",
     "offer": 70,
 }
 ```
@@ -130,7 +133,7 @@ Alice submits a bid for the jacket for a price of 70.
 ```
 {
     "duck": "Alice"
-    "name": "Pants",
+    "clothingItem": "Pants",
     "offer": 50,
 }
 ```
@@ -140,7 +143,7 @@ Alice submits a bid for the jacket for a price of 70.
 ```
 {
     "duck": "Clarence"
-    "name": "Pants",
+    "clothingItem": "Pants",
     "offer": 100,
 }
 ```
@@ -150,7 +153,7 @@ Alice submits a bid for the jacket for a price of 70.
 ```
 {
     "duck": "Clarence"
-    "name": "Pants",
+    "clothingItem": "Pants",
     "offer": 55,
 }
 ```
@@ -160,7 +163,7 @@ Alice submits a bid for the jacket for a price of 70.
 ```
 {
     "duck": "Clarence"
-    "name": "Jacket",
+    "clothingItem": "Jacket",
     "offer": 20,
 }
 ```
@@ -169,7 +172,7 @@ Alice submits a bid for the jacket for a price of 70.
 
 ```
 {
-    "name": "Pants"
+    "clothingItem": "Pants"
 }
 ```
 
@@ -202,7 +205,7 @@ Response:
 
 ```
 {
-    "name": "Jacket"
+    "clothingItem": "Jacket"
 }
 ```
 
